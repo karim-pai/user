@@ -20,7 +20,9 @@ import (
 	stdopentracing "github.com/opentracing/opentracing-go"
 	zipkin "github.com/openzipkin/zipkin-go-opentracing"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	commonMiddleware "github.com/weaveworks/common/middleware"
+	// commonMiddleware "github.com/weaveworks/common/middleware"
+	apmgorilla "go.elastic.co/apm/module/apmgorilla"
+
 )
 
 var (
@@ -139,21 +141,27 @@ func main() {
 
 	// HTTP router
 	router := api.MakeHTTPHandler(endpoints, logger, tracer)
+	
+	router.Use(apmgorilla.Middleware())
 
-	httpMiddleware := []commonMiddleware.Interface{
-		commonMiddleware.Instrument{
-			Duration:     HTTPLatency,
-			RouteMatcher: router,
-		},
-	}
+	fmt.Print("Instrumentation passed")
+	logger.Log("Instrumentation passed")
+	logger.Log("env", os.Getenv("ELASTIC_APM_SERVER_URL"))
+
+	// httpMiddleware := []commonMiddleware.Interface{
+	// 	commonMiddleware.Instrument{
+	// 		Duration:     HTTPLatency,
+	// 		RouteMatcher: router,
+	// 	},
+	// }
 
 	// Handler
-	handler := commonMiddleware.Merge(httpMiddleware...).Wrap(router)
+	// handler := commonMiddleware.Merge(httpMiddleware...).Wrap(router)
 
 	// Create and launch the HTTP server.
 	go func() {
 		logger.Log("transport", "HTTP", "port", port)
-		errc <- http.ListenAndServe(fmt.Sprintf(":%v", port), handler)
+		errc <- http.ListenAndServe(fmt.Sprintf(":%v", port), router)
 	}()
 
 	// Capture interrupts.

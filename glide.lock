@@ -1,5 +1,5 @@
-hash: ab1322ca6d24e40907af3a701959880ad721afa2e1b67eaf0c945bb74c9a5c30
-updated: 2017-04-28T12:53:43.461401871+02:00
+hash: 59e479b4c9d14c838cb2ff41e860868ae625a1677687d6d0293b1c536c4e6b62
+updated: 2021-05-20T18:02:39.949495479+02:00
 imports:
 - name: github.com/afex/hystrix-go
   version: 39520ddd07a9d9a071d615f7476798659f5a3b89
@@ -64,6 +64,13 @@ imports:
   version: c12348ce28de40eed0136aa2b644d0ee0650e56c
   subpackages:
   - pbutil
+- name: github.com/microservices-demo/user
+  version: ea7bc23723af8452c0c7c4c8f21f33a568c431a2
+  subpackages:
+  - api
+  - db
+  - db/mongodb
+  - users
 - name: github.com/opentracing/opentracing-go
   version: 5e5abf838007b08f96ae057bc182636a178da0b9
   subpackages:
@@ -112,6 +119,8 @@ imports:
   - errors
   - middleware
   - user
+- name: go.elastic.co/apm
+  version: c5c7e21aa26a6def7790f74fbceed792ad47ef35
 - name: golang.org/x/net
   version: 7394c112eae4dba7e96bfcfe738e6373d61772b4
   subpackages:
